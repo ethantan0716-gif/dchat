@@ -107,7 +107,7 @@ export function ChatRoom({
       <header className="chat-header">
         <div style={{ marginBottom: 8 }}>
           <Link href="/conversations" className="btn btn-secondary" style={{ display: "inline-block" }}>
-            Back to Inbox
+            Back to Chats
           </Link>
         </div>
         <div className="chat-header-title">{headerTitle}</div>
