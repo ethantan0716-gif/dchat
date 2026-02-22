@@ -1,0 +1,259 @@
+:root {
+  color-scheme: light;
+  --bg: #f4f7fb;
+  --card: #ffffff;
+  --text: #132039;
+  --muted: #5f6b82;
+  --line: #d9e1ee;
+  --primary: #1664d6;
+  --primary-strong: #0f4aa0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: radial-gradient(circle at 10% 10%, #ffffff 0%, #eef4ff 45%, #f7fafc 100%);
+  color: var(--text);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.layout-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+}
+
+.sidebar {
+  background: var(--card);
+  border-right: 1px solid var(--line);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sidebar h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.conversation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+}
+
+.create-chat-form {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #f9fbff;
+}
+
+.create-chat-form input,
+.create-chat-form select {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: #fff;
+}
+
+.participant-list {
+  max-height: 130px;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 6px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.participant-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+.conversation-item {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px;
+  display: block;
+  background: #fff;
+}
+
+.conversation-item:hover {
+  border-color: var(--primary);
+}
+
+.conversation-item.active {
+  border-color: var(--primary);
+  background: #edf4ff;
+}
+
+.chat-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.chat-header {
+  border-bottom: 1px solid var(--line);
+  background: var(--card);
+  padding: 14px 18px;
+}
+
+.chat-header-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.chat-header-subtitle {
+  margin-top: 4px;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.message-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.message {
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  max-width: 80%;
+}
+
+.message.own {
+  margin-left: auto;
+  border-color: #bed6ff;
+  background: #eaf2ff;
+}
+
+.message-meta {
+  margin-top: 4px;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.inbox-item {
+  display: block;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.inbox-item:hover {
+  border-color: var(--primary);
+}
+
+.inbox-item-title {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.inbox-item-preview {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.chat-composer {
+  border-top: 1px solid var(--line);
+  background: var(--card);
+  padding: 12px;
+  display: flex;
+  gap: 8px;
+}
+
+.chat-composer input {
+  flex: 1;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.btn {
+  border: 0;
+  border-radius: 10px;
+  background: var(--primary);
+  color: #fff;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: var(--primary-strong);
+}
+
+.btn-secondary {
+  background: #e8eefb;
+  color: #153059;
+}
+
+.btn-secondary:hover {
+  background: #dbe7fc;
+}
+
+.page-center {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 20px;
+  width: min(520px, 100%);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+@media (max-width: 900px) {
+  .layout-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+  }
+}
