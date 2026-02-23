@@ -13,33 +13,6 @@ export default async function ChatLayout({ children }: { children: React.ReactNo
     redirect("/signin");
   }
 
-  const conversations = await prisma.conversation.findMany({
-    where: {
-      members: {
-        some: {
-          userId: session.user.id,
-        },
-      },
-    },
-    include: {
-      members: {
-        include: {
-          user: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-            },
-          },
-        },
-      },
-      messages: {
-        orderBy: { createdAt: "desc" },
-        take: 1,
-      },
-    },
-    orderBy: { updatedAt: "desc" },
-  });
   const users = await prisma.user.findMany({
     where: {
       id: {
@@ -59,17 +32,26 @@ export default async function ChatLayout({ children }: { children: React.ReactNo
   return (
     <main className="layout-shell">
       <aside className="sidebar">
-        <div>
-          <h2>DChat</h2>
-          <div className="muted" style={{ marginTop: 4 }}>
-            {session.user.name ?? session.user.email}
+        <details className="menu-drawer">
+          <summary aria-label="Open menu">
+            <span className="hamburger-line" />
+            <span className="hamburger-line" />
+            <span className="hamburger-line" />
+          </summary>
+          <div className="menu-panel">
+            <div>
+              <h2>DChat</h2>
+              <div className="muted" style={{ marginTop: 4 }}>
+                {session.user.name ?? session.user.email}
+              </div>
+            </div>
+            <Link href="/conversations" className="btn" style={{ textAlign: "center" }}>
+              Home
+            </Link>
+            <ConversationSidebar users={users} />
+            <SignOutButton />
           </div>
-        </div>
-        <Link href="/conversations" className="btn" style={{ textAlign: "center" }}>
-          Home
-        </Link>
-        <ConversationSidebar currentUserId={session.user.id} conversations={conversations} users={users} />
-        <SignOutButton />
+        </details>
       </aside>
       {children}
     </main>

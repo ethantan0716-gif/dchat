@@ -1,40 +1,17 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
-type SidebarConversation = {
-  id: string;
-  type: "DM" | "GROUP";
-  title: string | null;
-  members: Array<{
-    user: {
-      id: string;
-      name: string | null;
-      email: string;
-    };
-  }>;
-  messages: Array<{
-    body: string;
-  }>;
-};
-
 export function ConversationSidebar({
-  currentUserId,
-  conversations,
   users,
 }: {
-  currentUserId: string;
-  conversations: SidebarConversation[];
   users: Array<{
     id: string;
     name: string | null;
     email: string;
   }>;
 }) {
-  const pathname = usePathname();
   const router = useRouter();
   const [type, setType] = useState<"DM" | "GROUP">("DM");
   const [title, setTitle] = useState("");
@@ -227,29 +204,6 @@ export function ConversationSidebar({
         </button>
       </form>
 
-      <div className="conversation-list">
-        {conversations.map((conversation) => {
-          const isActive = pathname === `/conversations/${conversation.id}`;
-          const title =
-            conversation.type === "GROUP"
-              ? conversation.title ?? "Untitled group"
-              : conversation.members.find((m) => m.user.id !== currentUserId)?.user.name ?? "Direct message";
-          const preview = conversation.messages[0]?.body ?? "No messages yet";
-
-          return (
-            <Link
-              key={conversation.id}
-              href={`/conversations/${conversation.id}`}
-              className={`conversation-item${isActive ? " active" : ""}`}
-            >
-              <strong>{title}</strong>
-              <div className="muted" style={{ marginTop: 4, fontSize: "0.85rem" }}>
-                {preview}
-              </div>
-            </Link>
-          );
-        })}
-      </div>
     </>
   );
 }
