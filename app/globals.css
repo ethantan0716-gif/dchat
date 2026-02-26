@@ -296,15 +296,48 @@ select {
   height: 42px;
   border-radius: 50%;
   flex: 0 0 auto;
-  border: 1px solid #d6e2ee;
+  border: 1px solid #d9e1ea;
+  background: linear-gradient(180deg, #f0f3f7 0%, #e4e9ef 100%);
+  position: relative;
+  overflow: hidden;
 }
 
-.chat-avatar.user {
-  background: linear-gradient(180deg, #f9fdff 0%, #e9f2fb 100%);
+.chat-avatar::before {
+  content: "";
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #c3ccd8;
+  left: 50%;
+  top: 8px;
+  transform: translateX(-50%);
 }
 
-.chat-avatar.group {
-  background: linear-gradient(180deg, #f8fbff 0%, #e2edf8 100%);
+.chat-avatar::after {
+  content: "";
+  position: absolute;
+  width: 28px;
+  height: 16px;
+  border-radius: 14px 14px 8px 8px;
+  background: #c3ccd8;
+  left: 50%;
+  bottom: 5px;
+  transform: translateX(-50%);
+}
+
+.chat-avatar.group::before {
+  width: 10px;
+  height: 10px;
+  left: 40%;
+  top: 10px;
+  box-shadow: 10px 0 0 #c3ccd8;
+}
+
+.chat-avatar.group::after {
+  width: 30px;
+  height: 14px;
+  border-radius: 10px;
 }
 
 .chat-composer {
