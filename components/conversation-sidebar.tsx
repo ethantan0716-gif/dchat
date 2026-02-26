@@ -3,44 +3,16 @@
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
-export function ConversationSidebar({
-  users,
-}: {
-  users: Array<{
-    id: string;
-    name: string | null;
-    email: string;
-  }>;
-}) {
+export function ConversationSidebar() {
   const router = useRouter();
-  const [type, setType] = useState<"DM" | "GROUP">("DM");
   const [title, setTitle] = useState("");
-  const [participantIds, setParticipantIds] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [joining, setJoining] = useState(false);
   const [error, setError] = useState("");
   const [joinCode, setJoinCode] = useState("");
   const [joinError, setJoinError] = useState("");
 
-  const canCreate = useMemo(() => {
-    if (type === "DM") {
-      return participantIds.length === 1;
-    }
-
-    return title.trim().length > 0;
-  }, [participantIds.length, title, type]);
-
-  function toggleParticipant(userId: string) {
-    setParticipantIds((current) => {
-      if (type === "DM") {
-        return [userId];
-      }
-      if (current.includes(userId)) {
-        return current.filter((id) => id !== userId);
-      }
-      return [...current, userId];
-    });
-  }
+  const canCreate = useMemo(() => title.trim().length > 0, [title]);
 
   async function createConversation(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -58,9 +30,9 @@ export function ConversationSidebar({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          type,
-          participantIds,
-          ...(type === "GROUP" ? { title: title.trim() } : {}),
+          type: "GROUP",
+          participantIds: [],
+          title: title.trim(),
         }),
       });
 
@@ -71,7 +43,6 @@ export function ConversationSidebar({
 
       const body = (await response.json()) as { conversation: { id: string } };
       setTitle("");
-      setParticipantIds([]);
       router.push(`/conversations/${body.conversation.id}`);
       router.refresh();
     } catch (createError) {
@@ -120,61 +91,11 @@ export function ConversationSidebar({
   return (
     <>
       <form className="create-chat-form" onSubmit={createConversation}>
-        <h3 style={{ margin: 0, fontSize: "1rem" }}>New chat</h3>
-        <label className="muted" htmlFor="chat-type" style={{ fontSize: "0.85rem" }}>
-          Type
-        </label>
-        <select
-          id="chat-type"
-          value={type}
-          onChange={(e) => {
-            const nextType = e.target.value === "GROUP" ? "GROUP" : "DM";
-            setType(nextType);
-            setParticipantIds([]);
-          }}
-        >
-          <option value="DM">Direct message</option>
-          <option value="GROUP">Group</option>
-        </select>
-
-        {type === "GROUP" ? (
-          <input
-            placeholder="Group title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            maxLength={100}
-          />
-        ) : null}
-
-        <div className="participant-list">
-          {users.length === 0 && type === "DM" ? (
-            <p className="muted" style={{ margin: 0, fontSize: "0.8rem" }}>
-              No other users found yet. Ask family to sign in once first.
-            </p>
-          ) : (
-            <>
-              {type === "GROUP" ? (
-                <p className="muted" style={{ margin: 0, fontSize: "0.8rem" }}>
-                  Optional: select members now, or let them join later with a code.
-                </p>
-              ) : null}
-              {users.map((user) => {
-                const checked = participantIds.includes(user.id);
-                return (
-                  <label key={user.id} className="participant-item">
-                    <input
-                      type={type === "DM" ? "radio" : "checkbox"}
-                      name="participant"
-                      checked={checked}
-                      onChange={() => toggleParticipant(user.id)}
-                    />
-                    <span>{user.name ?? user.email}</span>
-                  </label>
-                );
-              })}
-            </>
-          )}
-        </div>
+        <h3 style={{ margin: 0, fontSize: "1rem" }}>New group chat</h3>
+        <input placeholder="Group title" value={title} onChange={(e) => setTitle(e.target.value)} maxLength={100} />
+        <p className="muted" style={{ margin: 0, fontSize: "0.8rem" }}>
+          Members will join privately with the join code after this group is created.
+        </p>
 
         {error ? (
           <p style={{ margin: 0, color: "#b42318", fontSize: "0.8rem" }}>

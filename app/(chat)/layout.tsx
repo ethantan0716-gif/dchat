@@ -1,10 +1,8 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/auth";
 import { ConversationSidebar } from "@/components/conversation-sidebar";
 import { SignOutButton } from "@/components/signout-button";
-import { prisma } from "@/lib/prisma";
 
 export default async function ChatLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
@@ -12,22 +10,6 @@ export default async function ChatLayout({ children }: { children: React.ReactNo
   if (!session?.user?.id) {
     redirect("/signin");
   }
-
-  const users = await prisma.user.findMany({
-    where: {
-      id: {
-        not: session.user.id,
-      },
-    },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-    },
-    orderBy: {
-      createdAt: "asc",
-    },
-  });
 
   return (
     <main className="layout-shell">
@@ -45,10 +27,7 @@ export default async function ChatLayout({ children }: { children: React.ReactNo
                 {session.user.name ?? session.user.email}
               </div>
             </div>
-            <Link href="/conversations" className="btn" style={{ textAlign: "center" }}>
-              Home
-            </Link>
-            <ConversationSidebar users={users} />
+            <ConversationSidebar />
             <SignOutButton />
           </div>
         </details>
