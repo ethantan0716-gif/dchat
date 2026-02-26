@@ -92,21 +92,31 @@ select {
 }
 
 .menu-panel {
-  position: absolute;
+  position: fixed;
   left: 0;
-  top: 50px;
-  width: 300px;
-  max-height: calc(100vh - 70px);
+  top: 0;
+  width: min(320px, 88vw);
+  height: 100vh;
   overflow-y: auto;
   background: #fff;
-  border: 1px solid var(--panel-line);
-  border-radius: 14px;
-  box-shadow: 0 10px 30px rgba(27, 50, 74, 0.16);
-  padding: 12px;
+  border-right: 1px solid var(--panel-line);
+  box-shadow: 8px 0 24px rgba(27, 50, 74, 0.16);
+  padding: 14px 12px 12px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  z-index: 20;
+  z-index: 60;
+  transform: translateX(-105%);
+  transition: transform 180ms ease;
+}
+
+.menu-drawer[open] .menu-panel {
+  transform: translateX(0);
+}
+
+.menu-drawer[open] > summary {
+  background: #d9ecff;
+  border-color: #c8e1f9;
 }
 
 .conversation-list {
@@ -322,6 +332,6 @@ select {
   }
 
   .menu-panel {
-    width: min(94vw, 360px);
+    width: min(360px, 90vw);
   }
 }
