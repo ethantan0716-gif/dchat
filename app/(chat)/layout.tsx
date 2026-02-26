@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 import { auth } from "@/auth";
 import { ConversationSidebar } from "@/components/conversation-sidebar";
@@ -27,6 +28,9 @@ export default async function ChatLayout({ children }: { children: React.ReactNo
                 {session.user.name ?? session.user.email}
               </div>
             </div>
+            <Link href="/conversations" className="btn" style={{ textAlign: "center" }}>
+              Home
+            </Link>
             <ConversationSidebar />
             <SignOutButton />
           </div>

@@ -1,6 +1,4 @@
 "use client";
-
-import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 import { createPusherClient } from "@/lib/pusher-client";
@@ -105,11 +103,6 @@ export function ChatRoom({
   return (
     <section className="chat-main">
       <header className="chat-header">
-        <div style={{ marginBottom: 8 }}>
-          <Link href="/conversations" className="btn btn-secondary" style={{ display: "inline-block" }}>
-            Back to Chats
-          </Link>
-        </div>
         <div className="chat-header-title">{headerTitle}</div>
         {headerSubtitle ? <div className="chat-header-subtitle">{headerSubtitle}</div> : null}
       </header>

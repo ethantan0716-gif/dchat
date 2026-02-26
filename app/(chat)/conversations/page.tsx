@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/auth";
+import { InboxList } from "@/components/inbox-list";
 import { prisma } from "@/lib/prisma";
 
 export default async function ConversationsLandingPage() {
@@ -27,6 +27,7 @@ export default async function ConversationsLandingPage() {
               id: true,
               name: true,
               email: true,
+              image: true,
             },
           },
         },
@@ -45,31 +46,16 @@ export default async function ConversationsLandingPage() {
         <div className="chat-header-title">Inbox</div>
         <div className="chat-header-subtitle">Your previous chats</div>
       </header>
-      <div className="message-list">
-        {conversations.length === 0 ? (
+      {conversations.length === 0 ? (
+        <div className="message-list inbox-list">
           <div className="card">
             <h3>No chats yet</h3>
-            <p className="muted">Create a chat from the sidebar to get started.</p>
+            <p className="muted">Create a chat from the menu to get started.</p>
           </div>
-        ) : (
-          conversations.map((conversation) => {
-            const name =
-              conversation.type === "GROUP"
-                ? conversation.title ?? "Untitled group"
-                : conversation.members.find((m) => m.user.id !== session.user.id)?.user.name ??
-                  conversation.members.find((m) => m.user.id !== session.user.id)?.user.email ??
-                  "Direct message";
-            const preview = conversation.messages[0]?.body ?? "No messages yet";
-
-            return (
-              <Link key={conversation.id} href={`/conversations/${conversation.id}`} className="inbox-item">
-                <div className="inbox-item-title">{name}</div>
-                <div className="inbox-item-preview">{preview}</div>
-              </Link>
-            );
-          })
-        )}
-      </div>
+        </div>
+      ) : (
+        <InboxList conversations={conversations} currentUserId={session.user.id} />
+      )}
     </section>
   );
 }
