@@ -41,7 +41,7 @@ export default async function ConversationsLandingPage() {
   });
 
   return (
-    <section className="chat-main">
+    <section className="chat-main inbox-main">
       <header className="chat-header">
         <div className="chat-header-title">Inbox</div>
         <div className="chat-header-subtitle">Your previous chats</div>

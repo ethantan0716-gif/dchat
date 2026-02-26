@@ -186,6 +186,8 @@ select {
   flex-direction: column;
   min-width: 0;
   background: linear-gradient(180deg, #f5f9fc 0%, #eef4f8 100%);
+  justify-content: flex-start;
+  align-items: stretch;
 }
 
 .chat-header {
@@ -222,6 +224,12 @@ select {
   background-image: none;
   align-items: stretch;
   justify-content: flex-start;
+}
+
+.inbox-main .message-list {
+  flex: 0 1 auto;
+  min-height: 0;
+  align-content: flex-start;
 }
 
 .inbox-search-wrap {
