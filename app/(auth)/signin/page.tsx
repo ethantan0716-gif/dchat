@@ -12,18 +12,30 @@ export default async function SignInPage() {
   return (
     <main className="page-center">
       <section className="card">
-        <h1>Welcome to DChat</h1>
-        <p className="muted">Sign in with Google to start chatting.</p>
-        <form
-          action={async () => {
-            "use server";
-            await signIn("google", { redirectTo: "/conversations" });
-          }}
-        >
-          <button className="btn" type="submit">
-            Continue with Google
-          </button>
-        </form>
+        <h1>Start chatting now</h1>
+        <p className="muted">Use Google account access for both new and existing users.</p>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 10 }}>
+          <form
+            action={async () => {
+              "use server";
+              await signIn("google", { redirectTo: "/conversations" });
+            }}
+          >
+            <button className="btn" type="submit">
+              Sign in
+            </button>
+          </form>
+          <form
+            action={async () => {
+              "use server";
+              await signIn("google", { redirectTo: "/conversations" });
+            }}
+          >
+            <button className="btn btn-secondary" type="submit">
+              Log in
+            </button>
+          </form>
+        </div>
       </section>
     </main>
   );
