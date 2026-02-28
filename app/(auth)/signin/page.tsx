@@ -10,18 +10,22 @@ export default async function SignInPage() {
   }
 
   return (
-    <main className="page-center">
-      <section className="card">
+    <main className="auth-shell">
+      <section className="auth-card">
+        <div className="auth-pill">DChat</div>
         <h1>Start chatting now</h1>
-        <p className="muted">Use Google account access for both new and existing users.</p>
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 10 }}>
+        <p className="muted">
+          Family updates, group chats, and direct messages in one place. New users can sign in, returning users can
+          log in.
+        </p>
+        <div className="auth-actions">
           <form
             action={async () => {
               "use server";
               await signIn("google", { redirectTo: "/conversations" });
             }}
           >
-            <button className="btn" type="submit">
+            <button className="btn auth-btn-primary" type="submit">
               Sign in
             </button>
           </form>
@@ -31,7 +35,7 @@ export default async function SignInPage() {
               await signIn("google", { redirectTo: "/conversations" });
             }}
           >
-            <button className="btn btn-secondary" type="submit">
+            <button className="btn btn-secondary auth-btn-secondary" type="submit">
               Log in
             </button>
           </form>
