@@ -411,10 +411,161 @@ select {
   display: grid;
   place-items: center;
   padding: 24px;
+  position: relative;
+  overflow: hidden;
   background:
     radial-gradient(circle at 20% 10%, rgba(51, 144, 236, 0.2) 0, transparent 38%),
     radial-gradient(circle at 80% 90%, rgba(43, 125, 208, 0.15) 0, transparent 40%),
     linear-gradient(180deg, #d2e0ea 0%, #d8e4ec 100%);
+}
+
+.auth-showcase {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.phone-mock {
+  position: absolute;
+  width: 170px;
+  height: 340px;
+  border-radius: 28px;
+  padding: 8px;
+  background: linear-gradient(180deg, #24374b 0%, #1b2938 100%);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 0 20px 50px rgba(18, 42, 66, 0.22);
+  opacity: 0.32;
+}
+
+.phone-home {
+  left: 7%;
+  top: 10%;
+  transform: rotate(-10deg);
+}
+
+.phone-inbox {
+  left: 26%;
+  bottom: 8%;
+  transform: rotate(-5deg);
+}
+
+.phone-chat {
+  right: 23%;
+  top: 9%;
+  transform: rotate(7deg);
+}
+
+.phone-group {
+  right: 6%;
+  bottom: 9%;
+  transform: rotate(11deg);
+}
+
+.phone-notch {
+  width: 68px;
+  height: 8px;
+  border-radius: 8px;
+  background: #0f1f2f;
+  margin: 2px auto 8px;
+}
+
+.phone-screen {
+  height: calc(100% - 18px);
+  border-radius: 20px;
+  background: linear-gradient(180deg, #f3f8fc 0%, #ebf3f9 100%);
+  overflow: hidden;
+  border: 1px solid #cdd9e4;
+}
+
+.phone-topbar {
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #21415f;
+  background: #dde8f2;
+  border-bottom: 1px solid #d0dde9;
+}
+
+.phone-home-grid {
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.phone-home-card {
+  border: 1px solid #d5e0eb;
+  border-radius: 9px;
+  height: 58px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.68rem;
+  color: #58708a;
+}
+
+.phone-chat-list {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.phone-chat-row {
+  display: flex;
+  gap: 8px;
+  padding: 7px;
+  border: 1px solid #dbe5ee;
+  border-radius: 9px;
+  background: #fff;
+  font-size: 0.62rem;
+}
+
+.phone-chat-row strong {
+  display: block;
+  color: #2b4865;
+}
+
+.phone-chat-row p {
+  margin: 0;
+  color: #6d8297;
+}
+
+.phone-avatar {
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: #cfdae6;
+  flex: 0 0 auto;
+}
+
+.phone-bubbles {
+  padding: 9px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.phone-bubble {
+  max-width: 78%;
+  padding: 6px 7px;
+  border-radius: 9px;
+  font-size: 0.62rem;
+  border: 1px solid #d2dfea;
+}
+
+.phone-bubble.in {
+  background: #fff;
+}
+
+.phone-bubble.out {
+  margin-left: auto;
+  background: #d7efff;
+  border-color: #bfddf3;
 }
 
 .auth-card {
@@ -494,5 +645,33 @@ select {
   .auth-card {
     border-radius: 18px;
     padding: 22px;
+  }
+
+  .phone-home,
+  .phone-inbox,
+  .phone-chat,
+  .phone-group {
+    opacity: 0.2;
+    transform: none;
+  }
+
+  .phone-home {
+    left: -20px;
+    top: 60px;
+  }
+
+  .phone-inbox {
+    left: 30px;
+    bottom: 40px;
+  }
+
+  .phone-chat {
+    right: -24px;
+    top: 90px;
+  }
+
+  .phone-group {
+    right: 20px;
+    bottom: 20px;
   }
 }
