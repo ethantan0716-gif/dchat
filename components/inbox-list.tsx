@@ -7,7 +7,7 @@ type InboxConversation = {
   id: string;
   type: "DM" | "GROUP";
   title: string | null;
-  messages: Array<{ body: string }>;
+  messages: Array<{ body: string; createdAt: string | Date }>;
   members: Array<{
     user: {
       id: string;
@@ -26,6 +26,12 @@ export function InboxList({
   currentUserId: string;
 }) {
   const [query, setQuery] = useState("");
+
+  function formatTime(value: string | Date | undefined) {
+    if (!value) return "";
+    const date = new Date(value);
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  }
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -67,12 +73,20 @@ export function InboxList({
                 ? conversation.title ?? "Untitled group"
                 : otherMember?.user.name ?? otherMember?.user.email ?? "Direct message";
             const preview = conversation.messages[0]?.body ?? "No messages yet";
+            const time = formatTime(conversation.messages[0]?.createdAt);
 
             return (
               <Link key={conversation.id} href={`/conversations/${conversation.id}`} className="inbox-item">
-                <div className={`chat-avatar ${conversation.type === "GROUP" ? "group" : "user"}`} />
+                {conversation.type === "DM" && otherMember?.user.image ? (
+                  <img className="chat-avatar-img" src={otherMember.user.image} alt={name} />
+                ) : (
+                  <div className={`chat-avatar ${conversation.type === "GROUP" ? "group" : "user"}`} />
+                )}
                 <div className="inbox-item-content">
-                  <div className="inbox-item-title">{name}</div>
+                  <div className="inbox-item-row">
+                    <div className="inbox-item-title">{name}</div>
+                    <div className="inbox-item-time">{time}</div>
+                  </div>
                   <div className="inbox-item-preview">{preview}</div>
                 </div>
               </Link>

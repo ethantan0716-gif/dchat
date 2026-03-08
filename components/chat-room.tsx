@@ -35,6 +35,7 @@ export function ChatRoom({
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
+  const [typingIndicator, setTypingIndicator] = useState(false);
 
   useEffect(() => {
     setMessages(initialMessages);
@@ -59,6 +60,15 @@ export function ChatRoom({
       client.disconnect();
     };
   }, [conversationId]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTypingIndicator(true);
+      setTimeout(() => setTypingIndicator(false), 1800);
+    }, 12000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const sortedMessages = useMemo(
     () => [...messages].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()),
@@ -107,20 +117,41 @@ export function ChatRoom({
         {headerSubtitle ? <div className="chat-header-subtitle">{headerSubtitle}</div> : null}
       </header>
       <div className="message-list">
-        {sortedMessages.map((message) => {
+        {sortedMessages.map((message, index) => {
           const own = message.senderId === currentUserId;
+          const isLatestOwn =
+            own &&
+            index ===
+              [...sortedMessages]
+                .map((m) => m.senderId === currentUserId)
+                .lastIndexOf(true);
 
           return (
             <article key={message.id} className={`message${own ? " own" : ""}`}>
               <div>{message.body}</div>
               <div className="message-meta">
-                {message.sender.name ?? "Unknown"} - {new Date(message.createdAt).toLocaleTimeString()}
+                {message.sender.name ?? "Unknown"} · {new Date(message.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}{" "}
+                {own ? <span className="message-status">{isLatestOwn ? "✓✓" : "✓"}</span> : null}
               </div>
             </article>
           );
         })}
+        {typingIndicator ? (
+          <div className="typing-indicator">
+            <span />
+            <span />
+            <span />
+            <em>Typing...</em>
+          </div>
+        ) : null}
       </div>
       <form className="chat-composer" onSubmit={handleSend}>
+        <button type="button" className="icon-btn" aria-label="Emoji picker">
+          🙂
+        </button>
+        <button type="button" className="icon-btn" aria-label="Attach file">
+          📎
+        </button>
         <input
           aria-label="Message"
           placeholder="Write a message"
@@ -128,8 +159,11 @@ export function ChatRoom({
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
+        <button type="button" className="icon-btn" aria-label="Voice message">
+          🎤
+        </button>
         <button className="btn" type="submit" disabled={sending}>
-          {sending ? "Sending..." : "Send"}
+          {sending ? "..." : "➤"}
         </button>
       </form>
     </section>
