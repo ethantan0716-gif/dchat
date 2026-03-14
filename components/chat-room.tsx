@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
+import { useRef } from "react";
 
 import { createPusherClient } from "@/lib/pusher-client";
 import { conversationChannel } from "@/lib/pusher-shared";
@@ -36,6 +37,9 @@ export function ChatRoom({
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
   const [typingIndicator, setTypingIndicator] = useState(false);
+  const [showEmoji, setShowEmoji] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     setMessages(initialMessages);
@@ -110,6 +114,63 @@ export function ChatRoom({
     }
   }
 
+  function appendEmoji(emoji: string) {
+    setText((current) => `${current}${emoji}`);
+    setShowEmoji(false);
+  }
+
+  function triggerAttachPicker() {
+    fileInputRef.current?.click();
+  }
+
+  function onAttachSelected(event: React.ChangeEvent<HTMLInputElement>) {
+    const selected = event.target.files?.[0];
+    if (!selected) return;
+    setText((current) => `${current}${current ? " " : ""}[Attachment: ${selected.name}]`);
+    event.target.value = "";
+  }
+
+  function startVoiceInput() {
+    type SpeechRecognitionCtor = new () => {
+      continuous: boolean;
+      interimResults: boolean;
+      lang: string;
+      onresult: ((event: unknown) => void) | null;
+      onerror: ((event: { error: string }) => void) | null;
+      onend: (() => void) | null;
+      start: () => void;
+      stop: () => void;
+    };
+
+    const ctor = (window as unknown as { SpeechRecognition?: SpeechRecognitionCtor; webkitSpeechRecognition?: SpeechRecognitionCtor }).SpeechRecognition ??
+      (window as unknown as { webkitSpeechRecognition?: SpeechRecognitionCtor }).webkitSpeechRecognition;
+
+    if (!ctor) {
+      alert("Voice input is not supported on this browser.");
+      return;
+    }
+
+    const recognition = new ctor();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = "en-US";
+    recognition.onresult = (event) => {
+      const transcript = (event as { results?: ArrayLike<ArrayLike<{ transcript?: string }>> }).results?.[0]?.[0]
+        ?.transcript ?? "";
+      if (transcript) {
+        setText((current) => `${current}${current ? " " : ""}${transcript}`);
+      }
+    };
+    recognition.onerror = () => {
+      setIsListening(false);
+    };
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+    setIsListening(true);
+    recognition.start();
+  }
+
   return (
     <section className="chat-main">
       <header className="chat-header">
@@ -146,12 +207,27 @@ export function ChatRoom({
         ) : null}
       </div>
       <form className="chat-composer" onSubmit={handleSend}>
-        <button type="button" className="icon-btn" aria-label="Emoji picker">
+        <input ref={fileInputRef} type="file" hidden onChange={onAttachSelected} />
+        <button
+          type="button"
+          className="icon-btn"
+          aria-label="Emoji picker"
+          onClick={() => setShowEmoji((v) => !v)}
+        >
           🙂
         </button>
-        <button type="button" className="icon-btn" aria-label="Attach file">
+        <button type="button" className="icon-btn" aria-label="Attach file" onClick={triggerAttachPicker}>
           📎
         </button>
+        {showEmoji ? (
+          <div className="emoji-popover">
+            {["😀", "😂", "😍", "👍", "🎉", "🙏", "🔥", "❤️"].map((emoji) => (
+              <button key={emoji} type="button" className="emoji-btn" onClick={() => appendEmoji(emoji)}>
+                {emoji}
+              </button>
+            ))}
+          </div>
+        ) : null}
         <input
           aria-label="Message"
           placeholder="Write a message"
@@ -159,8 +235,8 @@ export function ChatRoom({
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
-        <button type="button" className="icon-btn" aria-label="Voice message">
-          🎤
+        <button type="button" className="icon-btn" aria-label="Voice message" onClick={startVoiceInput}>
+          {isListening ? "●" : "🎤"}
         </button>
         <button className="btn" type="submit" disabled={sending}>
           {sending ? "..." : "➤"}
